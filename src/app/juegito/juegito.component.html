@@ -1,3 +1,15 @@
-<p>juegito works!</p>
-
-<!-- create class111111!!!!!!??????????????? -->
+<div class="container tablero">
+  <div class="columns">
+    <div *ngFor="let fila of tablero" class="column">
+      <div *ngFor="let celda of fila" class="column">
+        <div
+          class="box has-text-centered"
+          (click)="revelar(celda)"
+          [ngClass]="{ 'has-background-primary': celda.revelado }"
+        >
+          {{ celda.valor }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

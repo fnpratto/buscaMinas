@@ -24,33 +24,52 @@ export class JuegitoComponent {
     this.colocarMinas();
   }
 
-  inicializarTablero() {
-    let un_casillero: casillero = { valor: 0, revelado: false, bandera: false, mina: false };
+  private inicializarTablero() {
     for (let i = 0; i < this.filas; i++) {
       this.tablero[i] = [];
       for (let j = 0; j < this.columnas; j++) {
+        let un_casillero: casillero = { valor: 0, revelado: false, bandera: false, mina: false };
         this.tablero[i][j] = un_casillero;
       }
     }
   }
 
-  /**
-   * Places mines randomly on the game board.
-   */
-  colocarMinas() {
+  private colocarMinas() {
     let minasColocadas = 0;
     while (minasColocadas < this.minas) {
       let fila = Math.floor(Math.random() * this.filas);
       let columna = Math.floor(Math.random() * this.columnas);
-      modificarCasillasCercanas(fila, columna);
+      this.tablero[fila][columna].mina = true;
+      this.tablero[fila][columna].valor = -1;
+      this.modificarCasillasCercanas(fila, columna);
       minasColocadas++;
     }
-
   }
 
+  private modificarCasillasCercanas(fila: number, columna: number) {
+    for (let i = fila - 1; i <= fila + 1; i++) {
+      for (let j = columna - 1; j <= columna + 1; j++) {
+        if (this.en_matriz(i, j) && !this.tablero[i][j].mina) {
+          this.tablero[i][j].valor++;
+        }
+      }
+    }
+  }
+
+  private en_matriz(i: number, j: number) {
+    return i >= 0 && i < this.filas && j >= 0 && j < this.columnas
+  }
+
+  public revelar(celda: casillero) {
+    if (this.gameOver || celda.revelado || celda.bandera) {
+      return;
+    }
+
+    if (celda.mina) {
+      this.gameOver = true;
+    }
+
+    celda.revelado = true;
+  }
 }
 
-function modificarCasillasCercanas(fila: number, columna: number) {
-
-
-}
