@@ -5,6 +5,8 @@ interface casillero {
     revelado: boolean;
     bandera: boolean;
     mina: boolean;
+    coordX: number;
+    coordY: number;
 
 }
 

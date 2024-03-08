@@ -14,8 +14,9 @@ export class JuegitoComponent {
   columnas = 10;
   minas = 10;
   tablero: casillero[][] = [];
-
+  private celdasReveladas = 0;
   gameOver = false;
+  gameWin = true;
 
   constructor() { } // talvez dsps hago dependency injection
 
@@ -28,7 +29,7 @@ export class JuegitoComponent {
     for (let i = 0; i < this.filas; i++) {
       this.tablero[i] = [];
       for (let j = 0; j < this.columnas; j++) {
-        let un_casillero: casillero = { valor: 0, revelado: false, bandera: false, mina: false };
+        let un_casillero: casillero = { valor: 0, revelado: false, bandera: false, mina: false, coordX: i, coordY: j };
         this.tablero[i][j] = un_casillero;
       }
     }
@@ -60,6 +61,25 @@ export class JuegitoComponent {
     return i >= 0 && i < this.filas && j >= 0 && j < this.columnas
   }
 
+  private chequearCeldasContinuasACero(filas: number, columnas: number) {
+    if (this.tablero[filas][columnas].revelado) {
+      return;
+    }
+
+    this.tablero[filas][columnas].revelado = true;
+    this.celdasReveladas++;
+
+    if (this.tablero[filas][columnas].valor === 0) {
+      for (let i = filas - 1; i <= filas + 1; i++) {
+        for (let j = columnas - 1; j <= columnas + 1; j++) {
+          if (this.en_matriz(i, j)) {
+            this.chequearCeldasContinuasACero(i, j);
+          }
+        }
+      }
+    }
+  }
+
   public revelar(celda: casillero) {
     if (this.gameOver || celda.revelado || celda.bandera) {
       return;
@@ -69,7 +89,17 @@ export class JuegitoComponent {
       this.gameOver = true;
     }
 
-    celda.revelado = true;
+    if (celda.valor == 0) {
+      this.chequearCeldasContinuasACero(celda.coordX, celda.coordY);
+    } else {
+      celda.revelado = true;
+      this.celdasReveladas++;
+    }
+
+    if (this.celdasReveladas === (this.filas * this.columnas) - this.minas) {
+      this.gameWin = true;
+    }
   }
 }
+
 
