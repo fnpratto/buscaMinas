@@ -10,8 +10,8 @@ import casillero from '../../@types/Casillero';
 
 export class JuegitoComponent {
   title = 'buscaMinas_angular';
-  filas = 10;
-  columnas = 10;
+  filas = 8;
+  columnas = 8;
   minas = 10;
   tablero: casillero[][] = [];
   private celdasReveladas = 0;
@@ -62,7 +62,7 @@ export class JuegitoComponent {
   }
 
   private chequearCeldasContinuasACero(filas: number, columnas: number) {
-    if (this.tablero[filas][columnas].revelado) {
+    if (this.tablero[filas][columnas].revelado || this.tablero[filas][columnas].bandera) {
       return;
     }
 
@@ -93,12 +93,21 @@ export class JuegitoComponent {
       this.chequearCeldasContinuasACero(celda.coordX, celda.coordY);
     } else {
       celda.revelado = true;
+      celda.bandera = false;
       this.celdasReveladas++;
     }
 
     if (this.celdasReveladas === (this.filas * this.columnas) - this.minas) {
       this.gameWin = true;
     }
+  }
+
+  public ponerBandera(celda: casillero) {
+    if (this.gameOver || celda.revelado) {
+      return;
+    }
+
+    celda.bandera = !celda.bandera;
   }
 }
 

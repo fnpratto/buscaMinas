@@ -1,13 +1,22 @@
 <div class="container tablero">
-  <div class="columns">
-    <div *ngFor="let fila of tablero" class="column">
-      <div *ngFor="let celda of fila" class="column">
+  <div class="columns is-gapless">
+    <!-- Add is-gapless class to remove space between columns -->
+    <div *ngFor="let fila of tablero" class="column is-paddingless">
+      <!-- Add is-paddingless class to remove padding -->
+      <div *ngFor="let celda of fila" class="column is-paddingless">
+        <!-- Add is-paddingless class to remove padding -->
         <div
-          class="box has-text-centered"
+          class="button has-text-centered same-size"
           (click)="revelar(celda)"
-          [ngClass]="{ 'has-background-primary': celda.revelado }"
+          (contextmenu)="ponerBandera(celda); $event.preventDefault()"
+          [ngClass]="{
+            'has-background-primary': celda.revelado,
+            'has-background-white': celda.revelado && celda.valor === 0,
+            'has-background-danger': celda.valor === -1 && celda.revelado,
+            'has-background-info': celda.bandera
+          }"
         >
-          {{ celda.valor }}
+          {{ celda.revelado && !celda.mina ? celda.valor : "" }}
         </div>
       </div>
     </div>
