@@ -16,7 +16,7 @@ export class JuegitoComponent {
   tablero: casillero[][] = [];
   private celdasReveladas = 0;
   gameOver = false;
-  gameWin = true;
+  gameWin = false;
 
   constructor() { } // talvez dsps hago dependency injection
 
@@ -60,6 +60,13 @@ export class JuegitoComponent {
   private en_matriz(i: number, j: number) {
     return i >= 0 && i < this.filas && j >= 0 && j < this.columnas
   }
+  private revelarTablero() {
+    for (let i = 0; i < this.filas; i++) {
+      for (let j = 0; j < this.columnas; j++) {
+        this.tablero[i][j].revelado = true;
+      }
+    }
+  }
 
   private chequearCeldasContinuasACero(filas: number, columnas: number) {
     if (this.tablero[filas][columnas].revelado || this.tablero[filas][columnas].bandera) {
@@ -87,6 +94,7 @@ export class JuegitoComponent {
 
     if (celda.mina) {
       this.gameOver = true;
+      this.revelarTablero();
     }
 
     if (celda.valor == 0) {
@@ -99,6 +107,7 @@ export class JuegitoComponent {
 
     if (this.celdasReveladas === (this.filas * this.columnas) - this.minas) {
       this.gameWin = true;
+      this.revelarTablero();
     }
   }
 
@@ -108,6 +117,20 @@ export class JuegitoComponent {
     }
 
     celda.bandera = !celda.bandera;
+  }
+
+  public closeModal() {
+    this.gameOver = false;
+    this.gameWin = false;
+  }
+
+  public reiniciarJuego() {
+    this.gameOver = false;
+    this.gameWin = false;
+    this.celdasReveladas = 0;
+    this.tablero = [];
+    this.inicializarTablero();
+    this.colocarMinas();
   }
 }
 

@@ -1,24 +1,67 @@
-<div class="container tablero">
-  <div class="columns is-gapless">
-    <!-- Add is-gapless class to remove space between columns -->
-    <div *ngFor="let fila of tablero" class="column is-paddingless">
-      <!-- Add is-paddingless class to remove padding -->
-      <div *ngFor="let celda of fila" class="column is-paddingless">
-        <!-- Add is-paddingless class to remove padding -->
-        <div
-          class="button has-text-centered same-size"
-          (click)="revelar(celda)"
-          (contextmenu)="ponerBandera(celda); $event.preventDefault()"
-          [ngClass]="{
-            'has-background-primary': celda.revelado,
-            'has-background-white': celda.revelado && celda.valor === 0,
-            'has-background-danger': celda.valor === -1 && celda.revelado,
-            'has-background-info': celda.bandera
-          }"
-        >
-          {{ celda.revelado && !celda.mina ? celda.valor : "" }}
+<div class="container">
+  <div class="columns is-centered">
+    <div class="column is-half">
+      <div class="container tablero">
+        <div class="columns is-gapless">
+          <!-- Add is-gapless class to remove space between columns -->
+          <div *ngFor="let fila of tablero" class="column is-paddingless">
+            <!-- Add is-paddingless class to remove padding -->
+            <div *ngFor="let celda of fila" class="column is-paddingless">
+              <!-- Add is-paddingless class to remove padding -->
+              <div
+                class="button has-text-centered same-size"
+                (click)="revelar(celda)"
+                (contextmenu)="ponerBandera(celda); $event.preventDefault()"
+                [ngClass]="{
+                  'has-background-primary': celda.revelado,
+                  'has-background-white': celda.revelado && celda.valor === 0,
+                  'has-background-danger': celda.valor === -1 && celda.revelado,
+                  'has-background-info': celda.bandera
+                }"
+              >
+                {{ celda.revelado && !celda.mina ? celda.valor : "" }}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
+      <div class="modal" [class.is-active]="gameWin">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+          <div class="box">
+            <p class="has-text-centered">
+              Congratulaciones kapoo! ganaste 10 centavos negativos!
+            </p>
+          </div>
+        </div>
+        <button
+          class="modal-close is-large"
+          aria-label="close"
+          (click)="closeModal()"
+        ></button>
+      </div>
+
+      <div class="modal" [class.is-active]="gameOver">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+          <div class="box">
+            <p class="has-text-centered">Congratulaciones kapoo!!Perdiste</p>
+          </div>
+        </div>
+        <button
+          class="modal-close is-large"
+          aria-label="close"
+          (click)="closeModal()"
+        ></button>
+        <button class="button is-info" (click)="reiniciarJuego()">
+          Restart Game
+        </button>
+      </div>
+
+      <button class="button is-info" (click)="reiniciarJuego()">
+        <div class="has-text-centered">Restart Game</div>
+      </button>
     </div>
   </div>
 </div>
